@@ -15,7 +15,7 @@ and 'a stream = unit -> 'a pair
 
 let rec stream_of_list (l : 'a list) () : 'a stream = match l with [] -> fun () -> Null | h::t -> fun () -> Pair (h, stream_of_list t ())
 
-let rec stream_of_fun f = let h = f 0 in let t = stream_of_fun (fun n -> f (n + 1)) in Pair (h, fun () -> t )
+let rec stream_of_fun f = let h = f 0 in let t () = stream_of_fun (fun n -> f (n + 1)) in fun () -> Pair (h, t ())
 
 let rec map f s = fun () -> match s () with Null -> Null | Pair (h, t) -> Pair (f h, map f t)
 
